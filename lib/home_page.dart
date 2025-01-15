@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:api_exp/quote_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as myClient;
 
@@ -10,7 +11,8 @@ class Homepage extends StatefulWidget{
 
 class _HomepageState extends State<Homepage> {
 
-  Map<String,dynamic> mQuotes = {};
+  JsonModel? mQuotes;
+  // Map<String,dynamic> mQuotes = {};
   // https://dummyjson.com/quotes
 
   @override
@@ -25,12 +27,12 @@ class _HomepageState extends State<Homepage> {
     appBar: AppBar(
       title: Text("Home"),
     ),
-      body: mQuotes["quotes"]!=null? ListView.builder(
-          itemCount: mQuotes["quotes"].length,
+      body: mQuotes!=null ? ListView.builder(
+          itemCount: mQuotes!.quotes.length,
           itemBuilder: (_,index){
         return ListTile(
-          title: Text(mQuotes["quotes"][index]["quote"]),
-          subtitle: Text(mQuotes["quotes"][index]["author"]),
+          title: Text(mQuotes!.quotes[index].quote),
+          subtitle: Text(mQuotes!.quotes[index].author),
         );
       }):Container(),
     );
@@ -43,14 +45,13 @@ class _HomepageState extends State<Homepage> {
 
     if(res.statusCode==200){
       print(res.body);
-      mQuotes = jsonDecode(res.body);
+      mQuotes = JsonModel.fromJson(jsonDecode(res.body));
       setState(() {
 
       });
-      print(mQuotes["quotes"][1]["quote"]);
+      // print(mQuotes!.quotes[1].quote);
     }
-
-
     // print(res.body);
   }
 }
+
